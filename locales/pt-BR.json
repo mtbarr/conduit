@@ -1,0 +1,38 @@
+[
+  {
+    "id": "modal_title",
+    "translation": "Reportar um bug"
+  },
+  {
+    "id": "modal_title_label",
+    "translation": "Titulo"
+  },
+  {
+    "id": "modal_title_placeholder",
+    "translation": "Resumo curto do bug"
+  },
+  {
+    "id": "modal_desc_label",
+    "translation": "Descricao"
+  },
+  {
+    "id": "modal_desc_placeholder",
+    "translation": "Descricao detalhada do bug"
+  },
+  {
+    "id": "cooldown_message",
+    "translation": "Aguarde %s antes de enviar outro reporte de bug."
+  },
+  {
+    "id": "issue_failed",
+    "translation": "Falha ao criar issue no GitHub. Tente novamente mais tarde."
+  },
+  {
+    "id": "issue_created",
+    "translation": "Reporte de bug criado: %s"
+  },
+  {
+    "id": "issue_created_simple",
+    "translation": "Reporte de bug enviado com sucesso."
+  }
+]
