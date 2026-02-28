@@ -79,6 +79,7 @@ Example `locales/en.json`:
 
 ```json
 [
+  {"id": "command_name", "translation": "reportbug"},
   {"id": "modal_title", "translation": "Report a Bug"},
   {"id": "modal_title_label", "translation": "Title"},
   {"id": "modal_title_placeholder", "translation": "Short summary of the bug"},

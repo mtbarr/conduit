@@ -1,6 +1,10 @@
 package main
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"conduit/i18n"
+
+	"github.com/bwmarrin/discordgo"
+)
 
 type commandRegistrar interface {
 	ApplicationCommandCreate(appID, guildID string, cmd *discordgo.ApplicationCommand, options ...discordgo.RequestOption) (*discordgo.ApplicationCommand, error)
@@ -9,7 +13,7 @@ type commandRegistrar interface {
 
 func registerReportBugCommand(registrar commandRegistrar, appID, guildID string) (*discordgo.ApplicationCommand, error) {
 	return registrar.ApplicationCommandCreate(appID, guildID, &discordgo.ApplicationCommand{
-		Name:        "reportbug",
+		Name:        i18n.T("command_name"),
 		Description: "Report a bug — opens a form to create a GitHub issue",
 	})
 }

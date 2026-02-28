@@ -16,6 +16,7 @@ var (
 	once      sync.Once
 	bundle    *i18n.Bundle
 	localizer *i18n.Localizer
+	langUsed  string
 )
 
 func T(id string) string {
@@ -24,6 +25,14 @@ func T(id string) string {
 
 func Tf(id string, args ...any) string {
 	return fmt.Sprintf(localize(id), args...)
+}
+
+func CurrentLanguage() string {
+	once.Do(initBundle)
+	if langUsed == "" {
+		return "pt-BR"
+	}
+	return langUsed
 }
 
 func localize(id string) string {
@@ -42,13 +51,15 @@ func initBundle() {
 	bundle = i18n.NewBundle(language.MustParse("pt-BR"))
 	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
 	addDefaults()
-	loadMessages()
 	lang := resolveLang()
-	localizer = i18n.NewLocalizer(bundle, lang, "pt-BR", "en")
+	langUsed = lang
+	loadMessages(lang)
+	localizer = i18n.NewLocalizer(bundle, lang, "pt-BR")
 }
 
 func addDefaults() {
 	bundle.AddMessages(language.MustParse("pt-BR"),
+		&i18n.Message{ID: "command_name", Other: "reportarbug"},
 		&i18n.Message{ID: "modal_title", Other: "Reportar um bug"},
 		&i18n.Message{ID: "modal_title_label", Other: "Titulo"},
 		&i18n.Message{ID: "modal_title_placeholder", Other: "Resumo curto do bug"},
@@ -61,17 +72,28 @@ func addDefaults() {
 	)
 }
 
-func loadMessages() {
+func loadMessages(lang string) {
 	path := strings.TrimSpace(os.Getenv("I18N_PATH"))
 	if path == "" {
 		path = "locales"
 	}
-	files, err := filepath.Glob(filepath.Join(path, "*.json"))
+
+	tag, err := language.Parse(lang)
 	if err != nil {
 		return
 	}
-	for _, file := range files {
-		_, _ = bundle.LoadMessageFile(file)
+	base, _ := tag.Base()
+
+	candidates := []string{
+		filepath.Join(path, tag.String()+".json"),
+		filepath.Join(path, base.String()+".json"),
+	}
+
+	for _, file := range candidates {
+		if _, err := os.Stat(file); err == nil {
+			_, _ = bundle.LoadMessageFile(file)
+			return
+		}
 	}
 }
 
@@ -94,5 +116,9 @@ func normalizeLang(value string) string {
 	}
 	value = strings.Split(value, ".")[0]
 	value = strings.ReplaceAll(value, "_", "-")
-	return value
+	tag, err := language.Parse(value)
+	if err != nil {
+		return value
+	}
+	return tag.String()
 }

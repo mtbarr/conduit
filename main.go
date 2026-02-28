@@ -2,6 +2,7 @@ package main
 
 import (
 	"conduit/handlers"
+	"conduit/i18n"
 	"log"
 	"os"
 	"os/signal"
@@ -25,6 +26,12 @@ func main() {
 		log.Fatalf("Error creating Discord session: %v", err)
 	}
 
+	session.Identify.Intents = discordgo.IntentsGuilds
+
+	session.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
+		log.Printf("Logged in as %s#%s", r.User.Username, r.User.Discriminator)
+	})
+
 	session.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		switch i.Type {
 		case discordgo.InteractionApplicationCommand:
@@ -47,6 +54,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error registering /reportbug command: %v", err)
 	}
+	log.Printf("Language: %s", i18n.CurrentLanguage())
 	log.Println("Bot is running. Press Ctrl+C to exit.")
 
 	stop := make(chan os.Signal, 1)

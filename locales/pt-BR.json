@@ -1,5 +1,9 @@
 [
   {
+    "id": "command_name",
+    "translation": "reportarbug"
+  },
+  {
     "id": "modal_title",
     "translation": "Reportar um bug"
   },

@@ -3,6 +3,8 @@ package handlers
 import (
 	"testing"
 
+	"conduit/i18n"
+
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -25,7 +27,7 @@ func TestHandleCommand_ShowsModal(t *testing.T) {
 	interaction := &discordgo.Interaction{
 		Type: discordgo.InteractionApplicationCommand,
 		Data: discordgo.ApplicationCommandInteractionData{
-			Name: "reportbug",
+			Name: i18n.T("command_name"),
 		},
 	}
 	HandleCommand(responder, &discordgo.InteractionCreate{Interaction: interaction})
