@@ -16,6 +16,7 @@ A Discord bot that collects bug reports via a modal and creates GitHub issues.
  $env:GITHUB_OWNER="your-github-owner"
  $env:GITHUB_REPO="your-github-repo"
  $env:REPORTBUG_COOLDOWN_SECONDS="60"
+ $env:EPHEMERAL_DELETE_SECONDS="3"
  $env:APP_LANG="en"
  $env:I18N_PATH="C:\path\to\locales"
  .\conduit.exe
@@ -50,6 +51,7 @@ Run with explicit variables:
   -e GITHUB_OWNER="your-github-owner" \
   -e GITHUB_REPO="your-github-repo" \
   -e REPORTBUG_COOLDOWN_SECONDS="60" \
+  -e EPHEMERAL_DELETE_SECONDS="3" \
   -e APP_LANG="en" \
   -e I18N_PATH="/config/locales" \
   -v ${PWD}/locales:/config/locales:ro \
@@ -68,6 +70,7 @@ Required runtime environment variables:
 Optional:
 
 - `REPORTBUG_COOLDOWN_SECONDS` (default: 60)
+- `EPHEMERAL_DELETE_SECONDS` (default: 3, set to `0` to disable)
 - `APP_LANG` (default: `en`)
 - `I18N_PATH` (path to a directory with locale files, default: `locales`)
 

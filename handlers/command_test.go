@@ -12,6 +12,8 @@ type mockResponder struct {
 	called      int
 	interaction *discordgo.Interaction
 	response    *discordgo.InteractionResponse
+	deleteCalls int
+	deleteErr   error
 	err         error
 }
 
@@ -20,6 +22,12 @@ func (m *mockResponder) InteractionRespond(i *discordgo.Interaction, resp *disco
 	m.interaction = i
 	m.response = resp
 	return m.err
+}
+
+func (m *mockResponder) InteractionResponseDelete(i *discordgo.Interaction, _ ...discordgo.RequestOption) error {
+	m.deleteCalls++
+	m.interaction = i
+	return m.deleteErr
 }
 
 func TestHandleCommand_ShowsModal(t *testing.T) {

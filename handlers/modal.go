@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"log"
+	"time"
 
 	"conduit/github"
 	"conduit/i18n"
@@ -74,6 +75,13 @@ func respondEphemeral(s interactionResponder, i *discordgo.InteractionCreate, co
 	})
 	if err != nil {
 		logError("send ephemeral response", err)
+		return
+	}
+	if ephemeralDeleteDelay > 0 {
+		go func() {
+			time.Sleep(ephemeralDeleteDelay)
+			_ = s.InteractionResponseDelete(i.Interaction)
+		}()
 	}
 }
 
