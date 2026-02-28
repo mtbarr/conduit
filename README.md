@@ -1,101 +1,72 @@
-# Conduit
+# Conduit Discord Bot
 
-A Discord bot that collects bug reports via a modal and creates GitHub issues.
+A simple Discord bot for bug reports, feature requests, and listing GitHub issues. Supports i18n (English & Portuguese).
 
-## Build
+## Quick Start
 
-```powershell
- go build -o conduit .
-```
+1. **Clone the repo**
+2. **Create a `.env` file** with:
+   ```env
+   DISCORD_TOKEN=your-discord-token
+   GITHUB_TOKEN=your-github-token
+   GITHUB_OWNER=your-github-username
+   GITHUB_REPO=your-repo-name
+   GUILD_ID=your-discord-guild-id
+   APP_LANG=pt-BR   # or en
+   ```
+3. **Build and run:**
+   ```powershell
+   go build -o conduit .
+   .\conduit.exe
+   ```
 
-## Run
+## Usage
 
-```powershell
- $env:DISCORD_TOKEN="your-token"
- $env:GITHUB_TOKEN="your-github-token"
- $env:GITHUB_OWNER="your-github-owner"
- $env:GITHUB_REPO="your-github-repo"
- $env:REPORTBUG_COOLDOWN_SECONDS="60"
- $env:EPHEMERAL_DELETE_SECONDS="3"
- $env:APP_LANG="en"
- $env:I18N_PATH="C:\path\to\locales"
- .\conduit.exe
-```
+- `/reportarbug` — Report a bug (modal)
+- `/requestfeature` — Request a feature (modal)
+- `/issues` — List 10 latest open GitHub issues
 
-## Test
+## Environment Variables
 
-```powershell
- go test ./...
-```
+- `DISCORD_TOKEN` — Discord bot token (required)
+- `GITHUB_TOKEN` — GitHub token (required)
+- `GITHUB_OWNER` — GitHub username (required)
+- `GITHUB_REPO` — GitHub repo name (required)
+- `GUILD_ID` — Discord server ID (for instant command updates)
+- `APP_LANG` — Language (`pt-BR` or `en`, default: pt-BR)
+- `REPORTBUG_COOLDOWN_SECONDS` — Bug report cooldown (default: 60)
+- `REQUESTFEATURE_COOLDOWN_SECONDS` — Feature request cooldown (default: 60)
+- `EPHEMERAL_DELETE_SECONDS` — Ephemeral message delete time (default: 3)
+- `I18N_PATH` — Path to locale files (default: `locales`)
 
 ## Docker
 
-Build the image:
+Build:
+```powershell
+docker build -t conduit .
+```
+Run:
+```powershell
+docker run --rm --env-file .env conduit
+```
+
+## i18n (Languages)
+
+- Default: Portuguese (pt-BR)
+- English supported
+- Add more: create `locales/xx.json` and set `APP_LANG=xx`
+
+## Testing
 
 ```powershell
- docker build -t conduit .
+go test ./...
 ```
 
-Run with an env file:
+## Notes
+- Commands update instantly if `GUILD_ID` is set.
+- All strings (modals, messages) are translatable.
+- Cooldowns and ephemeral delete time are configurable.
 
-```powershell
- docker run --rm --env-file .env conduit
-```
+---
 
-Run with explicit variables:
-
-```powershell
- docker run --rm \
-  -e DISCORD_TOKEN="your-token" \
-  -e GITHUB_TOKEN="your-github-token" \
-  -e GITHUB_OWNER="your-github-owner" \
-  -e GITHUB_REPO="your-github-repo" \
-  -e REPORTBUG_COOLDOWN_SECONDS="60" \
-  -e EPHEMERAL_DELETE_SECONDS="3" \
-  -e APP_LANG="en" \
-  -e I18N_PATH="/config/locales" \
-  -v ${PWD}/locales:/config/locales:ro \
-  conduit
-```
-
-## Configuration
-
-Required runtime environment variables:
-
-- `DISCORD_TOKEN`
-- `GITHUB_TOKEN`
-- `GITHUB_OWNER`
-- `GITHUB_REPO`
-
-Optional:
-
-- `REPORTBUG_COOLDOWN_SECONDS` (default: 60)
-- `EPHEMERAL_DELETE_SECONDS` (default: 3, set to `0` to disable)
-- `APP_LANG` (default: `en`)
-- `I18N_PATH` (path to a directory with locale files, default: `locales`)
-
-## i18n
-
-The app uses `go-i18n` and loads locale files from `I18N_PATH` (defaults to `locales`). Each locale file is JSON and is named like `en.json`, `es.json`.
-
-Example `locales/en.json`:
-
-```json
-[
-  {"id": "command_name", "translation": "reportbug"},
-  {"id": "modal_title", "translation": "Report a Bug"},
-  {"id": "modal_title_label", "translation": "Title"},
-  {"id": "modal_title_placeholder", "translation": "Short summary of the bug"},
-  {"id": "modal_desc_label", "translation": "Description"},
-  {"id": "modal_desc_placeholder", "translation": "Detailed description of the bug"},
-  {"id": "cooldown_message", "translation": "Please wait %s before submitting another bug report."},
-  {"id": "issue_failed", "translation": "Failed to create GitHub issue. Please try again later."},
-  {"id": "issue_created_simple", "translation": "Bug report submitted successfully."}
-]
-```
-
-To add a language:
-
-1. Copy `locales/en.json` to `locales/<lang>.json`.
-2. Translate the `translation` values.
-3. Set `APP_LANG` to that language code (example: `es`).
+**Ready to use!**
