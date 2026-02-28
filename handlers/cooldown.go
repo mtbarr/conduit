@@ -8,42 +8,60 @@ import (
 	"time"
 )
 
-const defaultCooldownSeconds = 60
-
-var (
-	cooldownMu       sync.Mutex
-	lastReportByUser = map[string]time.Time{}
-	cooldownDuration = loadCooldownDuration()
+const (
+	defaultReportBugCooldownSeconds      = 60
+	defaultRequestFeatureCooldownSeconds = 60
 )
 
-func loadCooldownDuration() time.Duration {
+var (
+	cooldownMu                     sync.Mutex
+	lastActionByKey                = map[string]time.Time{}
+	reportbugCooldownDuration      = loadReportBugCooldownDuration()
+	requestfeatureCooldownDuration = loadRequestFeatureCooldownDuration()
+)
+
+func loadReportBugCooldownDuration() time.Duration {
 	value := os.Getenv("REPORTBUG_COOLDOWN_SECONDS")
 	if value == "" {
-		return time.Duration(defaultCooldownSeconds) * time.Second
+		return time.Duration(defaultReportBugCooldownSeconds) * time.Second
 	}
 
 	seconds, err := strconv.Atoi(value)
 	if err != nil || seconds < 1 {
-		return time.Duration(defaultCooldownSeconds) * time.Second
+		return time.Duration(defaultReportBugCooldownSeconds) * time.Second
 	}
 
 	return time.Duration(seconds) * time.Second
 }
 
-func checkAndMarkCooldown(userID string) (bool, time.Duration) {
+func loadRequestFeatureCooldownDuration() time.Duration {
+	value := os.Getenv("REQUESTFEATURE_COOLDOWN_SECONDS")
+	if value == "" {
+		return time.Duration(defaultRequestFeatureCooldownSeconds) * time.Second
+	}
+
+	seconds, err := strconv.Atoi(value)
+	if err != nil || seconds < 1 {
+		return time.Duration(defaultRequestFeatureCooldownSeconds) * time.Second
+	}
+
+	return time.Duration(seconds) * time.Second
+}
+
+func checkAndMarkCooldown(key string, duration time.Duration) (bool, time.Duration) {
 	now := time.Now()
 
 	cooldownMu.Lock()
 	defer cooldownMu.Unlock()
 
-	if last, ok := lastReportByUser[userID]; ok {
+	if last, ok := lastActionByKey[key]; ok {
 		elapsed := now.Sub(last)
-		if elapsed < cooldownDuration {
-			return false, cooldownDuration - elapsed
+		if elapsed < duration {
+			return false, duration - elapsed
 		}
 	}
 
-	lastReportByUser[userID] = now
+	lastActionByKey[key] = now
 	return true, 0
 }
 

@@ -46,7 +46,7 @@ func TestCreateIssue_Success(t *testing.T) {
 	t.Setenv("GITHUB_OWNER", "octo")
 	t.Setenv("GITHUB_REPO", "repo")
 
-	url, err := CreateIssue("Bug title", "Bug body")
+	url, err := CreateIssue("Bug title", "Bug body", []string{"bug"})
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
 	}
@@ -81,7 +81,7 @@ func TestCreateIssue_ErrorStatus(t *testing.T) {
 	t.Setenv("GITHUB_OWNER", "octo")
 	t.Setenv("GITHUB_REPO", "repo")
 
-	_, err := CreateIssue("Bug title", "Bug body")
+	_, err := CreateIssue("Bug title", "Bug body", []string{"bug"})
 	if err == nil {
 		t.Fatal("expected error")
 	}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"conduit/i18n"
 	"errors"
 	"testing"
 
@@ -47,8 +48,9 @@ func TestRegisterReportBugCommand(t *testing.T) {
 	if registrar.createAppID != "app-1" || registrar.createGuild != "guild-1" {
 		t.Fatalf("unexpected create args: %s %s", registrar.createAppID, registrar.createGuild)
 	}
-	if registrar.createCmd == nil || registrar.createCmd.Name != "reportbug" {
-		t.Fatalf("unexpected command details: %#v", registrar.createCmd)
+	expectedName := i18n.T("reportbug_command_name")
+	if registrar.createCmd == nil || registrar.createCmd.Name != expectedName {
+		t.Fatalf("unexpected command details: expected name %s, got %s", expectedName, registrar.createCmd.Name)
 	}
 }
 

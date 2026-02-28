@@ -9,14 +9,17 @@ import (
 )
 
 func TestHandleModal_CreatesIssueAndResponds(t *testing.T) {
-	reset := setCooldownStateForTest(2 * time.Second)
-	defer reset()
+	cooldownMu.Lock()
+	lastActionByKey = map[string]time.Time{}
+	cooldownMu.Unlock()
 
 	var gotTitle, gotBody string
+	var gotLabels []string
 	originalCreate := createIssue
-	createIssue = func(title, body string) (string, error) {
+	createIssue = func(title, body string, labels []string) (string, error) {
 		gotTitle = title
 		gotBody = body
+		gotLabels = labels
 		return "https://example.com/issue/1", nil
 	}
 	defer func() { createIssue = originalCreate }()
@@ -31,6 +34,9 @@ func TestHandleModal_CreatesIssueAndResponds(t *testing.T) {
 	if gotTitle != "Bug title" || gotBody != "Bug description" {
 		t.Fatalf("unexpected issue content: %q / %q", gotTitle, gotBody)
 	}
+	if len(gotLabels) != 1 || gotLabels[0] != "bug" {
+		t.Fatalf("unexpected labels: %v", gotLabels)
+	}
 	if responder.response == nil || responder.response.Data == nil {
 		t.Fatal("expected response data")
 	}
@@ -43,16 +49,14 @@ func TestHandleModal_CreatesIssueAndResponds(t *testing.T) {
 }
 
 func TestHandleModal_CooldownBlocks(t *testing.T) {
-	reset := setCooldownStateForTest(30 * time.Second)
-	defer reset()
-
 	cooldownMu.Lock()
-	lastReportByUser["user-1"] = time.Now()
+	lastActionByKey = map[string]time.Time{}
+	lastActionByKey["reportbug_user-1"] = time.Now()
 	cooldownMu.Unlock()
 
 	called := false
 	originalCreate := createIssue
-	createIssue = func(title, body string) (string, error) {
+	createIssue = func(title, body string, labels []string) (string, error) {
 		called = true
 		return "", nil
 	}
@@ -74,11 +78,12 @@ func TestHandleModal_CooldownBlocks(t *testing.T) {
 }
 
 func TestHandleModal_CreateIssueError(t *testing.T) {
-	reset := setCooldownStateForTest(2 * time.Second)
-	defer reset()
+	cooldownMu.Lock()
+	lastActionByKey = map[string]time.Time{}
+	cooldownMu.Unlock()
 
 	originalCreate := createIssue
-	createIssue = func(title, body string) (string, error) {
+	createIssue = func(title, body string, labels []string) (string, error) {
 		return "", errors.New("boom")
 	}
 	defer func() { createIssue = originalCreate }()
@@ -121,21 +126,5 @@ func modalInteraction(userID, title, description string) *discordgo.InteractionC
 				},
 			},
 		},
-	}
-}
-
-func setCooldownStateForTest(duration time.Duration) func() {
-	cooldownMu.Lock()
-	previousMap := lastReportByUser
-	previousDuration := cooldownDuration
-	lastReportByUser = map[string]time.Time{}
-	cooldownDuration = duration
-	cooldownMu.Unlock()
-
-	return func() {
-		cooldownMu.Lock()
-		lastReportByUser = previousMap
-		cooldownDuration = previousDuration
-		cooldownMu.Unlock()
 	}
 }

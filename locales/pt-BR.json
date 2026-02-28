@@ -1,42 +1,109 @@
 [
-  {
-    "id": "command_name",
+  {"id": "reportbug_command_name",
     "translation": "reportarbug"
   },
   {
-    "id": "modal_title",
+    "id": "reportbug_command_desc",
     "translation": "Reportar um bug"
   },
   {
-    "id": "modal_title_label",
+    "id": "reportbug_modal_title",
+    "translation": "Reportar um bug"
+  },
+  {
+    "id": "reportbug_modal_title_label",
     "translation": "Titulo"
   },
   {
-    "id": "modal_title_placeholder",
+    "id": "reportbug_modal_title_placeholder",
     "translation": "Resumo curto do bug"
   },
   {
-    "id": "modal_desc_label",
+    "id": "reportbug_modal_desc_label",
     "translation": "Descricao"
   },
   {
-    "id": "modal_desc_placeholder",
+    "id": "reportbug_modal_desc_placeholder",
     "translation": "Descricao detalhada do bug"
   },
   {
-    "id": "cooldown_message",
+    "id": "reportbug_cooldown_message",
     "translation": "Aguarde %s antes de enviar outro reporte de bug."
   },
   {
-    "id": "issue_failed",
+    "id": "reportbug_issue_failed",
     "translation": "Falha ao criar issue no GitHub. Tente novamente mais tarde."
   },
   {
-    "id": "issue_created",
-    "translation": "Reporte de bug criado: %s"
+    "id": "reportbug_issue_created_simple",
+    "translation": "Reporte de bug enviado com sucesso."
   },
   {
-    "id": "issue_created_simple",
-    "translation": "Reporte de bug enviado com sucesso."
+    "id": "requestfeature_command_name",
+    "translation": "requestfeature"
+  },
+  {
+    "id": "requestfeature_command_desc",
+    "translation": "Solicitar uma nova funcionalidade"
+  },
+  {
+    "id": "requestfeature_modal_title",
+    "translation": "Solicitar uma funcionalidade"
+  },
+  {
+    "id": "requestfeature_modal_title_label",
+    "translation": "Titulo"
+  },
+  {
+    "id": "requestfeature_modal_title_placeholder",
+    "translation": "Titulo da funcionalidade"
+  },
+  {
+    "id": "requestfeature_modal_desc_label",
+    "translation": "Descricao"
+  },
+  {
+    "id": "requestfeature_modal_desc_placeholder",
+    "translation": "Descricao detalhada da funcionalidade"
+  },
+  {
+    "id": "requestfeature_cooldown_message",
+    "translation": "Aguarde %s antes de solicitar outra funcionalidade."
+  },
+  {
+    "id": "requestfeature_issue_failed",
+    "translation": "Falha ao criar issue no GitHub. Tente novamente mais tarde."
+  },
+  {
+    "id": "requestfeature_issue_created_simple",
+    "translation": "Solicitacao de funcionalidade enviada com sucesso."
+  },
+  {
+    "id": "issues_command_name",
+    "translation": "issues"
+  },
+  {
+    "id": "issues_command_desc",
+    "translation": "Listar as 10 issues abertas mais recentes"
+  },
+  {
+    "id": "issues_failed",
+    "translation": "Falha ao obter issues do GitHub. Tente novamente mais tarde."
+  },
+  {
+    "id": "issues_no_issues",
+    "translation": "Nenhuma issue aberta encontrada."
+  },
+  {
+    "id": "issues_title",
+    "translation": "Issues Abertas"
+  },
+  {
+    "id": "issues_header",
+    "translation": "Aqui estao as 10 issues abertas mais recentes:"
+  },
+  {
+    "id": "issue_format",
+    "translation": "#%d - %s [%s]"
   }
 ]

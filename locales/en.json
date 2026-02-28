@@ -1,42 +1,110 @@
 [
   {
-    "id": "command_name",
+    "id": "reportbug_command_name",
     "translation": "reportbug"
   },
   {
-    "id": "modal_title",
+    "id": "reportbug_command_desc",
     "translation": "Report a Bug"
   },
   {
-    "id": "modal_title_label",
+    "id": "reportbug_modal_title",
+    "translation": "Report a Bug"
+  },
+  {
+    "id": "reportbug_modal_title_label",
     "translation": "Title"
   },
   {
-    "id": "modal_title_placeholder",
+    "id": "reportbug_modal_title_placeholder",
     "translation": "Short summary of the bug"
   },
   {
-    "id": "modal_desc_label",
+    "id": "reportbug_modal_desc_label",
     "translation": "Description"
   },
   {
-    "id": "modal_desc_placeholder",
+    "id": "reportbug_modal_desc_placeholder",
     "translation": "Detailed description of the bug"
   },
   {
-    "id": "cooldown_message",
+    "id": "reportbug_cooldown_message",
     "translation": "Please wait %s before submitting another bug report."
   },
   {
-    "id": "issue_failed",
+    "id": "reportbug_issue_failed",
     "translation": "Failed to create GitHub issue. Please try again later."
   },
   {
-    "id": "issue_created",
-    "translation": "Bug report created: %s"
+    "id": "reportbug_issue_created_simple",
+    "translation": "Bug report submitted successfully."
   },
   {
-    "id": "issue_created_simple",
-    "translation": "Bug report submitted successfully."
+    "id": "requestfeature_command_name",
+    "translation": "requestfeature"
+  },
+  {
+    "id": "requestfeature_command_desc",
+    "translation": "Request a New Feature"
+  },
+  {
+    "id": "requestfeature_modal_title",
+    "translation": "Request a Feature"
+  },
+  {
+    "id": "requestfeature_modal_title_label",
+    "translation": "Title"
+  },
+  {
+    "id": "requestfeature_modal_title_placeholder",
+    "translation": "Feature title"
+  },
+  {
+    "id": "requestfeature_modal_desc_label",
+    "translation": "Description"
+  },
+  {
+    "id": "requestfeature_modal_desc_placeholder",
+    "translation": "Detailed description of the feature"
+  },
+  {
+    "id": "requestfeature_cooldown_message",
+    "translation": "Please wait %s before requesting another feature."
+  },
+  {
+    "id": "requestfeature_issue_failed",
+    "translation": "Failed to create GitHub issue. Please try again later."
+  },
+  {
+    "id": "requestfeature_issue_created_simple",
+    "translation": "Feature request submitted successfully."
+  },
+  {
+    "id": "issues_command_name",
+    "translation": "issues"
+  },
+  {
+    "id": "issues_command_desc",
+    "translation": "List the 10 most recent open issues"
+  },
+  {
+    "id": "issues_failed",
+    "translation": "Failed to retrieve GitHub issues. Please try again later."
+  },
+  {
+    "id": "issues_no_issues",
+    "translation": "No open issues found."
+  },
+  {
+    "id": "issues_title",
+    "translation": "Open Issues"
+  },
+  {
+    "id": "issues_header",
+    "translation": "Here are the 10 most recent open issues:"
+  },
+  {
+    "id": "issue_format",
+    "translation": "#%d - %s [%s]"
   }
 ]

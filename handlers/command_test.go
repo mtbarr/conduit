@@ -35,7 +35,7 @@ func TestHandleCommand_ShowsModal(t *testing.T) {
 	interaction := &discordgo.Interaction{
 		Type: discordgo.InteractionApplicationCommand,
 		Data: discordgo.ApplicationCommandInteractionData{
-			Name: i18n.T("command_name"),
+			Name: i18n.T("reportbug_command_name"),
 		},
 	}
 	HandleCommand(responder, &discordgo.InteractionCreate{Interaction: interaction})

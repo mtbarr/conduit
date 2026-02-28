@@ -58,18 +58,38 @@ func initBundle() {
 }
 
 func addDefaults() {
-	bundle.AddMessages(language.MustParse("pt-BR"),
-		&i18n.Message{ID: "command_name", Other: "reportarbug"},
-		&i18n.Message{ID: "modal_title", Other: "Reportar um bug"},
-		&i18n.Message{ID: "modal_title_label", Other: "Titulo"},
-		&i18n.Message{ID: "modal_title_placeholder", Other: "Resumo curto do bug"},
-		&i18n.Message{ID: "modal_desc_label", Other: "Descricao"},
-		&i18n.Message{ID: "modal_desc_placeholder", Other: "Descricao detalhada do bug"},
-		&i18n.Message{ID: "cooldown_message", Other: "Aguarde %s antes de enviar outro reporte de bug."},
-		&i18n.Message{ID: "issue_failed", Other: "Falha ao criar issue no GitHub. Tente novamente mais tarde."},
-		&i18n.Message{ID: "issue_created", Other: "Reporte de bug criado: %s"},
-		&i18n.Message{ID: "issue_created_simple", Other: "Reporte de bug enviado com sucesso."},
+	err := bundle.AddMessages(language.MustParse("pt-BR"),
+		&i18n.Message{ID: "reportbug_command_name", Other: "reportarbug"},
+		&i18n.Message{ID: "reportbug_command_desc", Other: "Reportar um bug"},
+		&i18n.Message{ID: "reportbug_modal_title", Other: "Reportar um bug"},
+		&i18n.Message{ID: "reportbug_modal_title_label", Other: "Titulo"},
+		&i18n.Message{ID: "reportbug_modal_title_placeholder", Other: "Resumo curto do bug"},
+		&i18n.Message{ID: "reportbug_modal_desc_label", Other: "Descricao"},
+		&i18n.Message{ID: "reportbug_modal_desc_placeholder", Other: "Descricao detalhada do bug"},
+		&i18n.Message{ID: "reportbug_cooldown_message", Other: "Aguarde %s antes de enviar outro reporte de bug."},
+		&i18n.Message{ID: "reportbug_issue_failed", Other: "Falha ao criar issue no GitHub. Tente novamente mais tarde."},
+		&i18n.Message{ID: "reportbug_issue_created_simple", Other: "Reporte de bug enviado com sucesso."},
+		&i18n.Message{ID: "requestfeature_command_name", Other: "requestfeature"},
+		&i18n.Message{ID: "requestfeature_command_desc", Other: "Solicitar uma nova funcionalidade"},
+		&i18n.Message{ID: "requestfeature_modal_title", Other: "Solicitar uma funcionalidade"},
+		&i18n.Message{ID: "requestfeature_modal_title_label", Other: "Titulo"},
+		&i18n.Message{ID: "requestfeature_modal_title_placeholder", Other: "Titulo da funcionalidade"},
+		&i18n.Message{ID: "requestfeature_modal_desc_label", Other: "Descricao"},
+		&i18n.Message{ID: "requestfeature_modal_desc_placeholder", Other: "Descricao detalhada da funcionalidade"},
+		&i18n.Message{ID: "requestfeature_cooldown_message", Other: "Aguarde %s antes de solicitar outra funcionalidade."},
+		&i18n.Message{ID: "requestfeature_issue_failed", Other: "Falha ao criar issue no GitHub. Tente novamente mais tarde."},
+		&i18n.Message{ID: "requestfeature_issue_created_simple", Other: "Solicitacao de funcionalidade enviada com sucesso."},
+		&i18n.Message{ID: "issues_command_name", Other: "issues"},
+		&i18n.Message{ID: "issues_command_desc", Other: "Listar as 10 issues abertas mais recentes"},
+		&i18n.Message{ID: "issues_failed", Other: "Falha ao obter issues do GitHub. Tente novamente mais tarde."},
+		&i18n.Message{ID: "issues_no_issues", Other: "Nenhuma issue aberta encontrada."},
+		&i18n.Message{ID: "issues_title", Other: "Issues Abertas"},
+		&i18n.Message{ID: "issues_header", Other: "Aqui estao as 10 issues abertas mais recentes:"},
+		&i18n.Message{ID: "issue_format", Other: "#%d - %s [%s]"},
 	)
+	if err != nil {
+		return
+	}
 }
 
 func loadMessages(lang string) {
@@ -111,6 +131,7 @@ func resolveLang() string {
 
 func normalizeLang(value string) string {
 	value = strings.TrimSpace(value)
+	value = strings.Trim(value, "\"'")
 	if value == "" {
 		return ""
 	}

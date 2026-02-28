@@ -50,10 +50,27 @@ func main() {
 		}
 	}()
 
-	cmd, err := registerReportBugCommand(session, session.State.User.ID, "")
+	appID := session.State.User.ID
+	guildID := os.Getenv("GUILD_ID")
+
+	reportBugCmd, err := registerReportBugCommand(session, appID, guildID)
 	if err != nil {
-		log.Fatalf("Error registering /reportbug command: %v", err)
+		log.Fatalf("Error registering reportbug command: %v", err)
 	}
+	log.Printf("Registered command: %s (ID: %s)", reportBugCmd.Name, reportBugCmd.ID)
+
+	requestFeatureCmd, err := registerRequestFeatureCommand(session, appID, guildID)
+	if err != nil {
+		log.Fatalf("Error registering requestfeature command: %v", err)
+	}
+	log.Printf("Registered command: %s (ID: %s)", requestFeatureCmd.Name, requestFeatureCmd.ID)
+
+	issuesCmd, err := registerIssuesCommand(session, appID, guildID)
+	if err != nil {
+		log.Fatalf("Error registering issues command: %v", err)
+	}
+	log.Printf("Registered command: %s (ID: %s)", issuesCmd.Name, issuesCmd.ID)
+
 	log.Printf("Language: %s", i18n.CurrentLanguage())
 	log.Println("Bot is running. Press Ctrl+C to exit.")
 
@@ -62,8 +79,18 @@ func main() {
 	<-stop
 
 	log.Println("Shutting down...")
-	if err := deleteReportBugCommand(session, session.State.User.ID, "", cmd.ID); err != nil {
-		log.Printf("Error removing /reportbug command: %v", err)
+
+	if err := deleteReportBugCommand(session, appID, guildID, reportBugCmd.ID); err != nil {
+		log.Printf("Error removing reportbug command: %v", err)
 	}
+
+	if err := deleteRequestFeatureCommand(session, appID, guildID, requestFeatureCmd.ID); err != nil {
+		log.Printf("Error removing requestfeature command: %v", err)
+	}
+
+	if err := deleteIssuesCommand(session, appID, guildID, issuesCmd.ID); err != nil {
+		log.Printf("Error removing issues command: %v", err)
+	}
+
 	log.Println("Bot stopped.")
 }
