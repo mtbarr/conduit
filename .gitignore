@@ -1,2 +1,17 @@
 .env
 
+.idea/
+*.iml
+
+/bin/
+/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+coverage.out
+*.log
