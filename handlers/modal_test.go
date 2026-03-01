@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	"strings"
 	"testing"
 	"time"
 
@@ -31,8 +32,11 @@ func TestHandleModal_CreatesIssueAndResponds(t *testing.T) {
 	if responder.called != 1 {
 		t.Fatalf("expected responder to be called once, got %d", responder.called)
 	}
-	if gotTitle != "Bug title" || gotBody != "Bug description" {
-		t.Fatalf("unexpected issue content: %q / %q", gotTitle, gotBody)
+	if gotTitle != "Bug title" {
+		t.Fatalf("unexpected issue title: %q", gotTitle)
+	}
+	if !strings.Contains(gotBody, "## User Submission") || !strings.Contains(gotBody, "### Description") || !strings.Contains(gotBody, "Bug description") || !strings.Contains(gotBody, "### Metadata") || !strings.Contains(gotBody, "Reporter:") || !strings.Contains(gotBody, "<@user-1>") || !strings.Contains(gotBody, "Submitted at:") || !strings.Contains(gotBody, "```") {
+		t.Fatalf("unexpected issue body: %q", gotBody)
 	}
 	if len(gotLabels) != 1 || gotLabels[0] != "bug" {
 		t.Fatalf("unexpected labels: %v", gotLabels)
@@ -107,7 +111,7 @@ func modalInteraction(userID, title, description string) *discordgo.InteractionC
 	return &discordgo.InteractionCreate{
 		Interaction: &discordgo.Interaction{
 			Type:   discordgo.InteractionModalSubmit,
-			Member: &discordgo.Member{User: &discordgo.User{ID: userID}},
+			Member: &discordgo.Member{User: &discordgo.User{ID: userID, Username: "testuser", Discriminator: "1234"}},
 			Data: discordgo.ModalSubmitInteractionData{
 				CustomID: "modal_reportbug",
 				Components: []discordgo.MessageComponent{

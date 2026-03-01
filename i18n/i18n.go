@@ -102,6 +102,7 @@ func loadMessages(lang string) {
 	if err != nil {
 		return
 	}
+
 	base, _ := tag.Base()
 
 	candidates := []string{
@@ -122,10 +123,12 @@ func resolveLang() string {
 	if lang != "" {
 		return lang
 	}
+
 	lang = normalizeLang(os.Getenv("LANG"))
 	if lang != "" {
 		return lang
 	}
+
 	return "pt-BR"
 }
 
@@ -135,6 +138,7 @@ func normalizeLang(value string) string {
 	if value == "" {
 		return ""
 	}
+
 	value = strings.Split(value, ".")[0]
 	value = strings.ReplaceAll(value, "_", "-")
 	tag, err := language.Parse(value)

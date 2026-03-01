@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -17,15 +18,11 @@ func HandleModal(s interactionResponder, i *discordgo.InteractionCreate) {
 		return
 	}
 
-	customID := i.ModalSubmitData().CustomID
-	log.Printf("Received modal submit: %q", customID)
-	switch customID {
+	switch i.ModalSubmitData().CustomID {
 	case "modal_reportbug":
 		handleReportBugModal(s, i)
 	case "modal_requestfeature":
 		handleRequestFeatureModal(s, i)
-	default:
-		log.Printf("Unknown modal: %q", customID)
 	}
 }
 
@@ -59,7 +56,7 @@ func handleReportBugModal(s interactionResponder, i *discordgo.InteractionCreate
 		}
 	}
 
-	_, err := createIssue(title, description, []string{"bug"})
+	_, err := createIssue(title, buildIssueBody(description, i), []string{"bug"})
 	if err != nil {
 		logError("create github issue", err)
 		respondEphemeral(s, i, i18n.T("reportbug_issue_failed"))
@@ -99,7 +96,7 @@ func handleRequestFeatureModal(s interactionResponder, i *discordgo.InteractionC
 		}
 	}
 
-	_, err := createIssue(title, description, []string{"feature-request"})
+	_, err := createIssue(title, buildIssueBody(description, i), []string{"feature-request"})
 	if err != nil {
 		logError("create github feature request issue", err)
 		respondEphemeral(s, i, i18n.T("requestfeature_issue_failed"))
@@ -117,6 +114,47 @@ func getUserID(i *discordgo.InteractionCreate) string {
 		return i.User.ID
 	}
 	return ""
+}
+
+func buildIssueBody(description string, i *discordgo.InteractionCreate) string {
+	reporter := formatReporter(i)
+	timestamp := time.Now().Format("2006-01-02 15:04:05 MST")
+	return fmt.Sprintf(`## User Submission
+
+### Description
+%s
+
+---
+
+### Metadata
+
+`+"```"+`
+Reporter: %s
+Submitted at: %s
+`+"```"+`
+`, description, reporter, timestamp)
+}
+
+func formatReporter(i *discordgo.InteractionCreate) string {
+	user := getUser(i)
+	if user == nil || user.ID == "" {
+		return ""
+	}
+	tag := user.Username
+	if user.Discriminator != "" && user.Discriminator != "0" {
+		tag = fmt.Sprintf("%s#%s", user.Username, user.Discriminator)
+	}
+	return fmt.Sprintf("<@%s> (%s, id: %s)", user.ID, tag, user.ID)
+}
+
+func getUser(i *discordgo.InteractionCreate) *discordgo.User {
+	if i.Member != nil && i.Member.User != nil {
+		return i.Member.User
+	}
+	if i.User != nil {
+		return i.User
+	}
+	return nil
 }
 
 func respondEphemeral(s interactionResponder, i *discordgo.InteractionCreate, content string) {
@@ -140,7 +178,6 @@ func respondEphemeral(s interactionResponder, i *discordgo.InteractionCreate, co
 }
 
 func respondEphemeralIssues(s interactionResponder, i *discordgo.InteractionCreate) {
-	log.Println("Fetching issues from GitHub...")
 	issues, err := github.ListIssues(10)
 	if err != nil {
 		logError("list github issues", err)

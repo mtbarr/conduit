@@ -10,12 +10,12 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        arch: [amd64, arm64]
+        goos: [windows, linux]
+        goarch: [amd64]
     env:
       GO111MODULE: on
     steps:
@@ -27,25 +27,21 @@ jobs:
         with:
           go-version: '1.21'
 
-      - name: Build for ${{ matrix.os }}-${{ matrix.arch }}
+      - name: Set up Zig
+        uses: korandoru/setup-zig@v1
+        with:
+          zig-version: 'latest'
+
+      - name: Build with Zig for ${{ matrix.goos }}-${{ matrix.goarch }}
         run: |
-          mkdir -p dist
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            EXT=.exe
-          else
-            EXT=
-          fi
-          GOOS=$(echo "${{ matrix.os }}" | sed 's/-latest//; s/ubuntu/linux/; s/macos/darwin/')
-          GOARCH=${{ matrix.arch }}
-          echo "Building for GOOS=$GOOS GOARCH=$GOARCH"
-          go build -v -o dist/conduit-${GOOS}-${GOARCH}${EXT} .
+          zig build -Dgoos=${{ matrix.goos }} -Dgoarch=${{ matrix.goarch }}
         shell: bash
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: conduit-${{ matrix.os }}-${{ matrix.arch }}
-          path: dist/conduit-*
+          name: conduit-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/${{ matrix.goos }}-${{ matrix.goarch }}/conduit*
 
   release:
     needs: build
